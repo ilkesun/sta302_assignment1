@@ -1,0 +1,71 @@
+---
+title: " Estimating the Relationship between Forearm Lenght and Height of an Individual who is Taking STA302 in Fall 2020"
+author: "IS3109"
+date: "September 26, 2020"
+output: "github_document"
+---
+
+## I. Introduction 
+
+In this observational study the aim is to determine if there is a statistically significant relationship between forearm length and height of an individual in STA302 class. For this assignment we consider null hypothesis to be there is no statistically significant relationship between the forearm length and height. The sample size is 10 and the sample data was collected in the breakout room 8 during STA302 online lecture on 16th of September, 2020. Each individual in the room submitted their forearm length and height in centimeters to a shared excel file without specifying their name, gender, or any other information. This breakout room was determined by the course instructor, hence, we can't assume that these breakout rooms were selected at random. For this analysis, explanatory variable is forearm length and the response variable is height. The reason behind this design is that forearm length is more accessible and easier to measure compared to height.
+
+
+
+## II. Exploratory Data Analysis
+
+```{r, echo=FALSE, include = FALSE}
+sample_data <- read.csv("forearm_height.csv")
+attach(sample_data)
+library(tidyverse)
+```
+
+In our sample the response variable, height, is not normally distributed as seen on the histogram below. We would expect height in population, all of students who are taking STA302 in Fall 2020, to be closer to normal distribution. The reason behind this is the central limit theorem which suggests that as the sample size gets larger sampling distribution should follow normal distribution. We only have a sample of 10 students, where our approximate population is 800 students, in addition, since our sample is not unbiased (i.e. our sample is made up of the students from the same lecture) and sampling is not randomized (i.e. instructor assigned students to groups) it is not unusual that our response variable is not normally distributed.
+
+```{r, echo=FALSE}
+hist(height, main="Histogram of Height #3901")
+```
+
+```{r, echo=FALSE}
+summary(sample_data)
+```
+
+Forearm lengths in the sample have a mean of 24.5 centimeters and have a range of 7 cm, whereas, the mean of heights is 173.4 cm and range is 24 cm. These means and ranges can drastically change depending on our sample due to its small size. Nevertheless, we would expect height to have a higher mean and a larger spread because in the population we expect both variables to be closer to normal distribution and since height must be, for all individuals, greater than forearm length (i.e. higher mean of height) we would expect the spread associated with height to be greater as well.
+
+Looking at the scatterplot below, we observe that there are two outliers in the sample: these data points are (23, 180) and (27, 187). Both of these outliers lay above the OLS line which suggests their heights are greater than what their forearm length would predict given the regression from our sample.
+
+```{r, echo=FALSE, message=FALSE}
+ggplot(sample_data, aes(x=forearm,y=height)) + geom_point() + geom_smooth(method = lm) + labs(title="Scatterplot of Breakout Room 8 #3901")
+```
+
+
+
+## III. Methods and Model
+
+```{r, echo=FALSE}
+lmod = lm(height~forearm)
+summary(lmod)
+plot(forearm, height, xlab="Forearm (cm)", ylab = "Height (cm)", main = "Scatterplot of the Breakout Room 8 #3901")
+abline(lmod)
+```
+
+
+The Simple Linear Regression above shows that the regression parameters are not zero. The intercept is 106.6667, however, this intercept does not have a meaningful interpretation because we do not expect, if there is no abnormality or a disability regarding someone's forearm, anyone to have 0 cm as their forearm length. The slope parameter suggests that a centimeter bigger forearm is associated with approximately 2.7 centimeter higher height. In addition, we have decently large, considering our small sample, multiple r-squared which suggests that approximately 64% of the variance in height can be explained by forearm length of that individual. Since this is a bivariate regression we do not need to consider adjusted r-squared which is lower than multiple r-squared. 
+
+The most crucial part of the regression above is that both the intercept and the slope parameter are statistically significant for the conventional level of significance, which is 5%. Moreover, the slope parameter has a p-value of 0.0059 approximately, making this variable statistically significant for %1 level. Since the p-value of the slope parameter is gradually close to 0 we can conclude that it is unlikely to observe the given relationship between forearm length and height due to chance. Hence, we can reject the null hypothesis of there is no statistically significant relationship between forearm length and height, and say there is a statistically significant relationship between forearm length and height.
+
+
+
+## IV. Discussions and Limitations
+
+As said in Part I, the data was collected in breakout room 8 by individuals reporting their own height and forearm length without specifying any other information. This causes potential lurking variables to be involved in the analysis. Some of these potential lurking variables can be gender and age. The gender may effect forearm length and height unproportionally. For example, if females were to have smaller forearm length over height ratio compared to males, this may influence the slope parameter for our regression in terms of the coefficient, interpretation or the significance. Same goes for age, since forearm length and height is expected to grow throughout adolescence and our population is mostly made up of students who are either at the end of their adolescence or done with it, controlling for age may give us better results in terms of understanding the relationship between forearm length and height. 
+
+Our sample size is extremely small for this study which may cause error in our results and interpretations, namely sampling error. In order to improve our estimations we may can repeatedly chose different samples and run a regressions in order to capture different sample statistics. Or we can have larger sample size in order to reduce the sampling error. The mixture of these sample statistics will better mimic population parameters compared to our sample data. 
+
+Another potential limitation to this study is the response bias and/or error. The data was collected in a self-report of 10 students, and were not actually measured by a impartial party. In these self reports social desirability factor can play a role causing people to exaggerate their heights (or forearm lengths) since it is  desirable to be taller especially for males. And if they reported higher number this would influence our estimations in Part III.
+
+Another pair variables that can be chosen to explore Simple Linear Regression can be age and courses taken at University of Toronto. In this analysis explanatory variable can be age and response variable can be number of courses taken at UofT. With higher age we would expect more courses to be taken in UofT. These variables can be interesting since the coeefficients would marginal or instead of age people can report how old they are in terms of months which would make the regression more interesting in a different way since we can observe if being older in terms of months is associated with amount of courses taken in UofT.
+
+
+
+
+
